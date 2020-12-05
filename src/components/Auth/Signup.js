@@ -1,6 +1,7 @@
 import React, { useState, useEffect }  from 'react'
 import { GoogleLogin } from 'react-google-login'
 import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -12,7 +13,7 @@ import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import { signInGoogle, signInEmail } from '../../actions'
+import { signInGoogle, signUpWithEmail } from '../../actions'
 
 const useStyles = makeStyles({
 	container: {
@@ -72,7 +73,7 @@ const renderTextField = ({
 
 const SignUp = props => {
 	const classes = useStyles()
-	const [loading, setLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	// useEffect(() => {
 	// 	if (loading) return <CircularProgress />
@@ -86,9 +87,20 @@ const SignUp = props => {
 		console.log('damn!')
 	}
 
-	const handleClickSubmit = () => {
-		setLoading(true)
-		
+	const handleClickSubmit = (formValues) => {
+		// console.log(event)
+		// event.preventDefault()
+		// setIsLoading(true)
+		signUpWithEmail(formValues)
+			// .then(done => {
+			// 	console.log('yes')
+			// })
+			// .then(done => {
+			// 	setIsLoading(false)
+			// })
+			// .catch(err => {
+			// 	console.log(err)
+			// })
 	}	
 
 	return (
@@ -104,7 +116,7 @@ const SignUp = props => {
 						cookiePolicy={'single_host_origin'}
 						className={classes.googleButton}
 					/>
-					<form className={classes.form} onSubmit={() => console.log('submitted!')}>
+					<form className={classes.form} onSubmit={handleClickSubmit}>
 						<Field 
 							name='email'
 							label='email'
@@ -141,9 +153,9 @@ const SignUp = props => {
 							color="primary" 
 							onClick={handleClickSubmit}
 							type="submit"
-							disabled={loading ? true : false}
+							disabled={isLoading ? true : false}
 						>
-							{loading ? <CircularProgress /> : 'Sign Up'}
+							{isLoading ? <CircularProgress /> : 'Sign Up'}
 						</Button>
 						<div className={classes.linkContainer}>
 							<Link component={RouterLink} to='/auth/signin' className={classes.link}>
@@ -165,12 +177,12 @@ const validate = formValues => {
 // 	return {  }
 // }
 
-reduxSignUp = connect(
+const reduxSignUp = connect(
 	null, 
-	{ signInGoogle, signInEmail }
+	{ signInGoogle, signUpWithEmail }
 )(SignUp)
 
 export default reduxForm({
 	form: 'signupForm',
 	validate
-})(SignUp)
+})(reduxSignUp)

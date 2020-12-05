@@ -1,3 +1,10 @@
 export const SIGN_IN_GOOGLE = 'sign_in_google'
 export const SIGN_IN_EMAIL = 'sign_in_email'
 export const SIGN_OUT = 'sign_out'
+export const SIGN_UP_WITH_EMAIL = 'sign_up_with_email'
+
+export const FETCH_ITEMS = 'fetch_items'
+export const FETCH_ITEM = 'fetch_item'
+export const CREATE_ITEM = 'create_item'
+export const UPDATE_ITEM = 'update_item'
+export const DELETE_ITEM = 'delete_item'
