@@ -1,5 +1,7 @@
 import {
+	FETCHING_ITEMS,
 	FETCH_ITEMS,
+	FETCH_ITEMS_ERROR,
 	FETCH_ITEM,
 	CREATE_ITEM,
 	UPDATE_ITEM,
@@ -9,6 +11,7 @@ import history from '../history'
 import axios from 'axios'
 
 const fetchItems = () => async dispatch => {
+	dispatch({ type: FETCHING_ITEMS })
 	axios({
 		url: 'http://localhost:8003/',
 		method: 'GET',
@@ -18,11 +21,13 @@ const fetchItems = () => async dispatch => {
 		}
 	})
 	.then(response => {
+		console.log('from inside itemActions/fetchItems....')
 		console.log(response)
 		dispatch({ type: FETCH_ITEMS, payload: response.data })
 	})
 	.catch(err => {
 		console.log(err)
+		dispatch({ type: FETCH_ITEMS_ERROR, payload: err })
 	})
 }
 

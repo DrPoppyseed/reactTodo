@@ -1,7 +1,7 @@
 import React, { useState, useEffect }  from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import { Link as RouterLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,6 +11,10 @@ import TextField from '@material-ui/core/TextField'
 import Box from '@material-ui/core/Box'
 import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { signInGoogle, signUpWithEmail } from '../../actions'
@@ -56,24 +60,11 @@ const useStyles = makeStyles({
 	}
 })
 
-const renderTextField = ({
-	label,
-	input,
-	meta: {touched, invalid, error},
-	...custom
-}) => (
-	<TextField
-		label={label}
-		error={touched && invalid}
-		helperText={touched && error}
-		{...input}
-		{...custom}
-	/>
-)
-
 const SignUp = props => {
+	const { register, handleSubmit, control  } = useForm()
 	const classes = useStyles()
 	const [isLoading, setIsLoading] = useState(false)
+	const [showPassword, setShowPassword] = useState(true)
 
 	// useEffect(() => {
 	// 	if (loading) return <CircularProgress />
@@ -87,25 +78,25 @@ const SignUp = props => {
 		console.log('damn!')
 	}
 
+	const handleClickShowPassword = () => 
+	setShowPassword(prevShowPassword => !prevShowPassword)
+
 	const handleClickSubmit = (formValues) => {
 		// console.log(event)
 		// event.preventDefault()
 		// setIsLoading(true)
-		signUpWithEmail(formValues)
-			// .then(done => {
-			// 	console.log('yes')
-			// })
-			// .then(done => {
-			// 	setIsLoading(false)
-			// })
-			// .catch(err => {
-			// 	console.log(err)
-			// })
+		props.signUpWithEmail(formValues)
+
 	}	
+
+	const onSubmit = data => {
+		signUpWithEmail(data)
+	}
 
 	return (
 		<Container maxWidth='sm' className={classes.container}>
 			<Typography className={classes.pageTitle} variant='h6'>Sign Up</Typography>
+			
 			<Box className={classes.box}>
 				<div>
 					<GoogleLogin
@@ -116,42 +107,50 @@ const SignUp = props => {
 						cookiePolicy={'single_host_origin'}
 						className={classes.googleButton}
 					/>
-					<form className={classes.form} onSubmit={handleClickSubmit}>
-						<Field 
+					<form 
+						className={classes.form} 
+						onSubmit={handleSubmit(onSubmit)}
+					>
+						<TextField 
 							name='email'
 							label='email'
 							type='text'
+							inputRef={register}
 							className={classes.textfield}
-							component={renderTextField}
 							autoComplete='username'
 							variant='outlined'
+							control={control} 
+							defaultValue=''
 							required
 						/>
-						<Field
+						<TextField
+							type={showPassword ? 'text' : 'password'}
 							variant="outlined"
-							name='new-password'
+							inputRef={register}
+							name='password'
 							label='password'
-							type='password'
 							className={classes.textfield}
-							component={renderTextField}
 							autoComplete='new-password'
-							required
-						/>
-						<Field 
-							variant='outlined'
-							name='new-password'
-							type='password'
-							label='confirm your password'
-							className={classes.textfield}
-							component={renderTextField}
-							autoComplete='new-password'
+							control={control} 
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											aria-label="Toggle password visibility"
+											onClick={handleClickShowPassword}
+											edge="end"
+										>
+											{showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
 							required
 						/>
 						<Button 
 							className={classes.button} 
 							variant="contained" 
 							color="primary" 
-							onClick={handleClickSubmit}
 							type="submit"
 							disabled={isLoading ? true : false}
 						>
@@ -169,20 +168,10 @@ const SignUp = props => {
 	)
 }
 
-const validate = formValues => {
-	const errors = {}
+const mapDispatchToProps = {
+	signInGoogle, signUpWithEmail
 }
 
-// const mapStateToProps = (state) => {
-// 	return {  }
-// }
-
-const reduxSignUp = connect(
-	null, 
-	{ signInGoogle, signUpWithEmail }
+export default connect(
+	null, mapDispatchToProps
 )(SignUp)
-
-export default reduxForm({
-	form: 'signupForm',
-	validate
-})(reduxSignUp)

@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import history from '../history'
 
-import ItemList from './Item/ItemList'
+import ItemList from './Item/ItemList/'
 import SignIn from './Auth/SignIn'
 import SignUp from './Auth/SignUp'
 import Header from './Header'

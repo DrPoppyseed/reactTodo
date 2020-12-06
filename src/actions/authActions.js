@@ -37,7 +37,25 @@ const signUpWithEmail = formValues => async dispatch => {
 	// 	.catch(err => {
 	// 		console.log(err)
 	// 	})
+	axios({
+		url: 'http://localhost:8003/auth/signup',
+		method: 'PUT',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json;charset=UTF-8'
+		},
+		data: {...formValues}
+	})
+	.then(response => {
+		console.log(response)
+		dispatch({ type: SIGN_UP_WITH_EMAIL, payload: response.data })
+	})
+	.catch(err => {
+		console.log(err)
+	})
 }
+
+
 
 export {
 	signInGoogle,

@@ -3,13 +3,14 @@ import {
 } from "../actions/types"
 
 const INITIAL_STATE = {
-	// title = ''
+	isSignedIn: false,
+	userId: null
 }
 
 export default ((state=INITIAL_STATE, action) => {
 	switch(action.type) {
 		case SIGN_UP_WITH_EMAIL:
-			return {...state}
+			return {...state, isSignedIn: true, userId: action.payload.userId}
 		default:
 			return {state}
 	}

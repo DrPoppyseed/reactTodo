@@ -1,6 +1,7 @@
 import React, {useState}  from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import { Link as RouterLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -14,7 +15,7 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
-import Divider from '@material-ui/core/Divider';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles({
 	container: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles({
 		width: '100%'
 	},
 	button: {
+		height: 50,
 		marginTop: 40,
 		width: '100%'
 	},
@@ -56,58 +58,10 @@ const useStyles = makeStyles({
 	}
 })
 
-const renderTextField = ({
-	label,
-	input,
-	meta: {touched, invalid, error},
-	...custom
-}) => (
-	<TextField
-		label={label}
-		error={touched && invalid}
-		helperText={touched && error}
-		{...input}
-		{...custom}
-	/>
-)
-
-const renderPasswordField = ({
-	label,
-	input,
-	meta: {touched, invalid, error},
-	...custom
-	}) => {
-		const [showPassword, setShowPassword] = useState(true)
-		const handleClickShowPassword = () => {
-		setShowPassword(prevShowPassword => !prevShowPassword)
-	}
-
-	return (
-		<TextField
-			type={showPassword ? 'text' : 'password'}
-			label={label}
-			error={touched && invalid}
-			helperText={touched && error}
-			InputProps={{
-				endAdornment: (
-					<InputAdornment position="end">
-						<IconButton
-							aria-label="Toggle password visibility"
-							onClick={handleClickShowPassword}
-							edge="end"
-						>
-							{showPassword ? <VisibilityOff /> : <Visibility />}
-						</IconButton>
-					</InputAdornment>
-				),
-			}}
-			{...input}
-			{...custom}
-		/>
-	)
-}
-
-const SignIn = (props) => {
+const SignIn = props => {
+	const { register, handleSubmit, control  } = useForm()
+	const [showPassword, setShowPassword] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
 	const classes = useStyles()
 
 	const onGLoginSuccess = () => {
@@ -116,6 +70,13 @@ const SignIn = (props) => {
 
 	const onGLoginFailure = () => {
 		console.log('damn!')
+	}
+
+	const handleClickShowPassword = () => 
+		setShowPassword(prevShowPassword => !prevShowPassword)
+
+	const onSubmit = data => {
+		console.log(data)
 	}
 
 
@@ -133,34 +94,54 @@ const SignIn = (props) => {
 						cookiePolicy={'single_host_origin'}
 						className={classes.googleButton}
 					/>
-					<form className={classes.form}>
-						<Field 
+					<form 
+						onSubmit={handleSubmit(onSubmit)}
+						className={classes.form}
+					>
+						<TextField 
 							name='email'
 							label='email'
 							type='text'
+							inputRef={register}
 							className={classes.textfield}
-							component={renderTextField}
 							autoComplete='username'
 							variant='outlined'
+							control={control} 
+							defaultValue=''
 							required
 						/>
-						<Field
+						<TextField
+							type={showPassword ? 'text' : 'password'}
 							variant="outlined"
-							name='current-password'
+							inputRef={register}
+							name='password'
 							label='password'
 							className={classes.textfield}
-							component={renderPasswordField}
 							autoComplete='current-password'
+							control={control} 
 							required
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											aria-label="Toggle password visibility"
+											onClick={handleClickShowPassword}
+											edge="end"
+										>
+											{showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
 						/>
 						<Button 
 							className={classes.button} 
 							variant="contained" 
 							color="primary"
-							disabled={false}
+							disabled={isLoading ? true : false}
 							type='submit'
 						>
-							Sign In
+							{isLoading ? <CircularProgress /> : 'Sign In'}
 						</Button>
 					</form>
 					<div className={classes.linkContainer}>
@@ -177,11 +158,4 @@ const SignIn = (props) => {
 	)
 }
 
-const validate = formValues => {
-	const errors = {}
-}
-
-export default reduxForm({
-	form: 'signinForm',
-	validate
-})(SignIn)
+export default connect()(SignIn)
