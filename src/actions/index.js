@@ -1,25 +1,27 @@
 import {
 	signInGoogle,
-	signInEmail,
+	signInWithEmail,
 	signUpWithEmail,
+	signInWithToken,
 	signOut,
 } from './authActions'
 import {
 	fetchItems,
-	fetchItem,
+	// fetchItem,
 	createItem,
-	updateItem,
-	deleteItem
+	// updateItem,
+	// deleteItem
 } from './itemActions'
 
 export {
 	signInGoogle,
-	signInEmail,
+	signInWithEmail,
 	signUpWithEmail,
+	signInWithToken,
 	signOut,
 	fetchItems,
-	fetchItem,
+	// fetchItem,
 	createItem,
-	updateItem,
-	deleteItem,
+	// updateItem,
+	// deleteItem,
 }

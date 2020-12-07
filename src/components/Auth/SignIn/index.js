@@ -1,10 +1,11 @@
 import React, {useState}  from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Link as RouterLink } from 'react-router-dom'
+import { signInWithEmail } from '../../../actions'
 
-import { makeStyles } from '@material-ui/core/styles'
+import useStyles from './styles'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -17,51 +18,13 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-const useStyles = makeStyles({
-	container: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-	pageTitle:{
-		marginTop: 150,
-	},
-	box: {
-		marginTop: 20,
-		width: 350
-	},
-	form: {
-		marginTop: 20,
-	},
-	textfield: {
-		marginTop: 10,
-		width: '100%'
-	},
-	button: {
-		height: 50,
-		marginTop: 40,
-		width: '100%'
-	},
-	googleButton: {
-		marginTop: 20,
-		width: '100%'
-	},
-	linkContainer: {
-		marginTop: 40,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between'
-	},
-	link: {
-		textDecoration: 'none'
-	}
-})
+
 
 const SignIn = props => {
 	const { register, handleSubmit, control  } = useForm()
 	const [showPassword, setShowPassword] = useState(true)
 	const [isLoading, setIsLoading] = useState(false)
+	const dispatch = useDispatch()
 	const classes = useStyles()
 
 	const onGLoginSuccess = () => {
@@ -76,9 +39,8 @@ const SignIn = props => {
 		setShowPassword(prevShowPassword => !prevShowPassword)
 
 	const onSubmit = data => {
-		console.log(data)
+		dispatch(signInWithEmail(data))
 	}
-
 
 	return (
 		<Container maxWidth='sm' className={classes.container}>
@@ -158,4 +120,4 @@ const SignIn = props => {
 	)
 }
 
-export default connect()(SignIn)
+export default SignIn

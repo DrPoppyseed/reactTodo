@@ -1,10 +1,10 @@
 import React, { useState, useEffect }  from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Link as RouterLink } from 'react-router-dom'
 
-import { makeStyles } from '@material-ui/core/styles'
+import useStyles from './styles'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -17,51 +17,11 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import { signInGoogle, signUpWithEmail } from '../../actions'
+import { signInGoogle, signUpWithEmail } from '../../../actions'
 
-const useStyles = makeStyles({
-	container: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-	pageTitle:{
-		marginTop: 150,
-	},
-	box: {
-		marginTop: 20,
-		width: 350
-	},
-	form: {
-		marginTop: 20,
-	},
-	textfield: {
-		marginTop: 10,
-		width: '100%'
-	},
-	googleButton: {
-		marginTop: 20,
-		width: '100%'
-	},
-	button: {
-		height: 50,
-		marginTop: 40,
-		width: '100%'
-	},
-	linkContainer: {
-		marginTop: 40,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between'
-	},
-	link: {
-		textDecoration: 'none'
-	}
-})
-
-const SignUp = props => {
-	const { register, handleSubmit, control  } = useForm()
+const SignUp = () => {
+	const { register, handleSubmit, control } = useForm()
+	const dispatch = useDispatch()
 	const classes = useStyles()
 	const [isLoading, setIsLoading] = useState(false)
 	const [showPassword, setShowPassword] = useState(true)
@@ -81,16 +41,8 @@ const SignUp = props => {
 	const handleClickShowPassword = () => 
 	setShowPassword(prevShowPassword => !prevShowPassword)
 
-	const handleClickSubmit = (formValues) => {
-		// console.log(event)
-		// event.preventDefault()
-		// setIsLoading(true)
-		props.signUpWithEmail(formValues)
-
-	}	
-
 	const onSubmit = data => {
-		signUpWithEmail(data)
+		dispatch(signUpWithEmail(data))
 	}
 
 	return (
@@ -168,10 +120,4 @@ const SignUp = props => {
 	)
 }
 
-const mapDispatchToProps = {
-	signInGoogle, signUpWithEmail
-}
-
-export default connect(
-	null, mapDispatchToProps
-)(SignUp)
+export default SignUp

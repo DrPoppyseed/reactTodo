@@ -11,28 +11,24 @@ import CreateItem from '../CreateItem/'
 import useStyles from './styles'
 
 const checkIsLoading = state => state.items.loading
+const checkIsSignedIn = state => state.auth.isSignedIn
 const checkItems = state => state.items.items
 
 const ItemList = () => {
 	const classes = useStyles()
 	const dispatch = useDispatch()
 	const items = useSelector(checkItems)
+	const isSignedIn = useSelector(checkIsSignedIn)
 	const isLoading = useSelector(checkIsLoading)
 
 	useEffect(() => {
-		dispatch(fetchItems())
+		if (isSignedIn) dispatch(fetchItems())
 	}, [])
-
-	useEffect(() => {
-		console.log('from inside useEffect/isLoading: ' + isLoading)
-		console.log('from inside useEffect/items...')
-		console.log(items)
-	}, [isLoading, items])
 
 	const renderItemList = items.map(item => {
 		console.log('from inside renderItemList: ' + item.title)
 		return (
-			<Item key={item.title} title={item.title} />
+			<Item key={item._id} title={item.title} />
 		)
 	})
 

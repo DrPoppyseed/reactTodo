@@ -26,7 +26,7 @@ const Header = props => {
 	return (
 		<AppBar>
 			<ToolBar className={classes.toolbar}>
-				<Link to='/' className={classes.button}>
+				<Link to='/items' className={classes.button}>
 					<Button className={classes.link}>
 						React Todo App
 					</Button>

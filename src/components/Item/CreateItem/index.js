@@ -10,7 +10,7 @@ import SendIcon from '@material-ui/icons/Send';
 import useStyles from './styles'
 
 const CreateItem = () => {
-	const { register, handleSubmit, control  } = useForm()
+	const { register, handleSubmit, control } = useForm()
 	const dispatch = useDispatch()
 	const classes = useStyles()
 

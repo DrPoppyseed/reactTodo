@@ -2,7 +2,18 @@ import {
 	FETCHING_ITEMS,
 	FETCH_ITEMS,
 	FETCH_ITEMS_ERROR,
-	CREATE_ITEM
+	CREATING_ITEM,
+	CREATE_ITEM,
+	CREATE_ITEM_ERROR,
+	FETCHING_ITEM_BY_ID,
+	FETCH_ITEM_BY_ID,
+	FETCH_ITEM_BY_ID_ERROR,
+	UPDATING_ITEM_BY_ID,
+	UPDATE_ITEM_BY_ID,
+	UPDATE_ITEM_BY_ID_ERROR,
+	DELETING_ITEM_BY_ID,
+	DELETE_ITEM_BY_ID,
+	DELETE_ITEM_BY_ID_ERROR
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -20,8 +31,18 @@ export default ((state=INITIAL_STATE, action) => {
 			return { ...state, loading: true }
 		case FETCH_ITEMS_ERROR: 
 			return { ...state, loading: false, error: action.payload }
+		case CREATING_ITEM: 
+			return { ...state, loading: true }
 		case CREATE_ITEM:
-			return { ...state, [action.payload]: action.payload }
+			return { ...state, items: [...state.items, action.payload.item], message: action.payload.message, loading: false }
+		case CREATE_ITEM_ERROR: 
+			return { ...state, loading: false, error: action.payload }
+		case FETCHING_ITEM_BY_ID: 
+			return { ...state, loading: true  }
+		case FETCH_ITEM_BY_ID:
+			return { ...state, loading: false  }
+		case FETCH_ITEM_BY_ID_ERROR:
+			return { ...state, loading: false, error: action.payload }
 		default: 
 			return state
 	}

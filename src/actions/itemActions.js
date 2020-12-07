@@ -1,21 +1,35 @@
+import { useSelector } from 'react-redux'
+
 import {
 	FETCHING_ITEMS,
 	FETCH_ITEMS,
 	FETCH_ITEMS_ERROR,
-	FETCH_ITEM,
+	FETCH_ITEM_BY_ID,
+	CREATING_ITEM,
 	CREATE_ITEM,
-	UPDATE_ITEM,
-	DELETE_ITEM,
+	UPDATE_ITEM_BY_ID,
+	DELETE_ITEM_BY_ID,
+	FETCH_ITEM_BY_ID_ERROR,
+	CREATE_ITEM_ERROR,
 } from './types'
 import history from '../history'
 import axios from 'axios'
 
-const fetchItems = () => async dispatch => {
+const token = null || localStorage.getItem('token')
+
+const fetchItems = () => async (dispatch) => {
+	if (!token) {
+		console.log('No token found [:fetchItems]')
+	}
+	console.log('from itemActions/fetchItems')
+	console.log(token)
 	dispatch({ type: FETCHING_ITEMS })
+
 	axios({
-		url: 'http://localhost:8003/',
+		url: 'http://localhost:8003/items',
 		method: 'GET',
 		headers: {
+			'Authorization': `Bearer ${token}`,
 			'Accept': 'application/json',
 			'Content-Type': 'application/json;charset=UTF-8'
 		}
@@ -31,17 +45,43 @@ const fetchItems = () => async dispatch => {
 	})
 }
 
-const fetchItem = () => {
-	return {
-		type: FETCH_ITEM
+const fetchItemById = () => {
+	dispatch({ type: FETCHING_ITEM_BY_ID })
+
+	if (!token) {
+		console.log('No token found [:fetchItemById]')
 	}
+
+	axios({
+		url: 'http://localhost:8003/items/:itemId',
+		method: 'GET',
+		header: {
+			'Authorization': `Bearer ${token}`,
+			'Accept': 'application/json',
+			'Content-Type': 'application/json;charset=UTF-8'
+		}
+	})
+	.then(response => {
+		dispatch({ type: FETCH_ITEM_BY_ID, payload: response.data })
+	})
+	.catch(err => {
+		console.log(err)
+		dispatch({ type: FETCH_ITEM_BY_ID_ERROR, payload: err })
+	})
 }
 
 const createItem = formValues => (dispatch, getState) => {
+	dispatch({ type: CREATING_ITEM })
+
+	if (!token) {
+		console.log('No token found [:fetchItems]')
+	}
+
 	axios({
-		url: 'http://localhost:8003/item',
+		url: 'http://localhost:8003/items/item',
 		method: 'POST',
 		headers: {
+			'Authorization': `Bearer ${token}`,
 			'Accept': 'application/json',
 			'Content-Type': 'application/json;charset=UTF-8'
 		},
@@ -50,30 +90,30 @@ const createItem = formValues => (dispatch, getState) => {
 	.then(response => {
 		console.log(response)
 		dispatch({ type: CREATE_ITEM, payload: response.data })
-		history.push('/')
+		history.push('/items')
 	})
 	.catch(err => {
-		setIsLoading(false)
+		dispatch({ type: CREATE_ITEM_ERROR, payload: err })
 		console.log(err)
 	})
 }
 
-const updateItem = () => {
-	return {
-		type: UPDATE_ITEM
-	}
-}
+// const updateItem = () => {
+// 	return {
+// 		type: UPDATE_ITEM
+// 	}
+// }
 
-const deleteItem = () => {
-	return {
-		type: DELETE_ITEM
-	}
-}
+// const deleteItem = () => {
+// 	return {
+// 		type: DELETE_ITEM
+// 	}
+// }
 
 export {
 	fetchItems,
-	fetchItem,
+	fetchItemById,
 	createItem,
-	updateItem,
-	deleteItem
+	// updateItem,
+	// deleteItem
 }
