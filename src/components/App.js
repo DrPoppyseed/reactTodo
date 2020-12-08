@@ -11,7 +11,7 @@ import { signInWithToken } from '../actions'
 
 import ItemList from './Item/ItemList/'
 import SignIn from './Auth/SignIn/'
-import SignUp from './Auth/SignUp'
+import SignUp from './Auth/SignUp/'
 import Header from './Header'
 
 const useStyles = makeStyles({

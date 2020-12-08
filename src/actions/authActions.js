@@ -11,7 +11,7 @@ import {
 import history from '../history'
 import axios from 'axios'
 
-const signInGoogle = () => {
+const signInGoogle = userId => {
 	return {
 		type: SIGN_IN_GOOGLE,
 		payload: userId
