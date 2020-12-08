@@ -4,7 +4,7 @@ import itemReducer from './itemReducer'
 import authReducer from './authReducer'
 
 export default combineReducers({
-	items: itemReducer,
-	auth: authReducer,
-	form: formReducer
+  items: itemReducer,
+  auth: authReducer,
+  form: formReducer,
 })
