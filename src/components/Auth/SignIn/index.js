@@ -20,7 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 
 
-const SignIn = props => {
+const SignIn = () => {
 	const { register, handleSubmit, control  } = useForm()
 	const [showPassword, setShowPassword] = useState(true)
 	const [isLoading, setIsLoading] = useState(false)

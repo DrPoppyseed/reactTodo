@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux'
+import { signOut } from '../actions'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -19,9 +20,29 @@ const useStyles = makeStyles({
 	}
 }) 
 
+const checkIsSignedIn = state => state.auth.isSignedIn
 
-const Header = props => {
+const Header = () => {
 	const classes = useStyles()
+	const dispatch = useDispatch()
+	const isSignedIn = useSelector(checkIsSignedIn)
+
+	const renderAuthButton = () => {
+		if (!isSignedIn)
+			return (
+				<Link to='/auth/signin' className={classes.button}>
+					<Button className={classes.link}>
+						Sign in | Sign up
+					</Button>
+				</Link>
+			)
+		else 
+			return (
+				<Button className={classes.link} onClick={() => dispatch(signOut())}>
+					Sign out
+				</Button>
+			)
+	}
 
 	return (
 		<AppBar>
@@ -31,11 +52,7 @@ const Header = props => {
 						React Todo App
 					</Button>
 				</Link>
-				<Link to='/auth/signin' className={classes.button}>
-					<Button className={classes.link}>
-						Sign in | Sign up
-					</Button>
-				</Link>
+				{renderAuthButton()}
 			</ToolBar>
 		</AppBar>
 	)

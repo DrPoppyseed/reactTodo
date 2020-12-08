@@ -2,6 +2,7 @@ import {
 	SIGN_UP_WITH_EMAIL,
 	SIGN_IN_WITH_EMAIL,
 	SIGN_IN_WITH_TOKEN,
+	SIGN_OUT,
 	AUTH_LOADING,
 	AUTH_FAILURE,
 	AUTH_SUCCESS
@@ -24,6 +25,8 @@ export default ((state=INITIAL_STATE, {type, payload}) => {
 			return { ...state, isSignedIn: true, userId: payload.userId, loading: false }
 		case SIGN_IN_WITH_TOKEN: 
 			return { ...state, isSignedIn: true, userId: payload.userId, loading: false }
+		case SIGN_OUT: 
+			return INITIAL_STATE
 		case AUTH_LOADING:
 			return { ...state, loading: true }
 		case AUTH_FAILURE: 

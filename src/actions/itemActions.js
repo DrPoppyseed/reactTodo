@@ -4,18 +4,28 @@ import {
 	FETCHING_ITEMS,
 	FETCH_ITEMS,
 	FETCH_ITEMS_ERROR,
+	FETCHING_ITEM_BY_ID,
 	FETCH_ITEM_BY_ID,
+	FETCH_ITEM_BY_ID_ERROR,
 	CREATING_ITEM,
 	CREATE_ITEM,
-	UPDATE_ITEM_BY_ID,
-	DELETE_ITEM_BY_ID,
-	FETCH_ITEM_BY_ID_ERROR,
 	CREATE_ITEM_ERROR,
+	UPDATING_ITEM_BY_ID,
+	UPDATE_ITEM_BY_ID,
+	UPDATE_ITEM_BY_ID_ERROR,
+	DELETING_ITEM_BY_ID,
+	DELETE_ITEM_BY_ID,
+	DELETE_ITEM_BY_ID_ERROR,
+	CLEAR_ITEMS
 } from './types'
 import history from '../history'
 import axios from 'axios'
 
 const token = null || localStorage.getItem('token')
+
+const clearItems = () => {
+	return { type: CLEAR_ITEMS }
+}
 
 const fetchItems = () => async (dispatch) => {
 	if (!token) {
@@ -45,7 +55,7 @@ const fetchItems = () => async (dispatch) => {
 	})
 }
 
-const fetchItemById = () => {
+const fetchItemById = () => dispatch => {
 	dispatch({ type: FETCHING_ITEM_BY_ID })
 
 	if (!token) {
@@ -80,6 +90,7 @@ const createItem = formValues => (dispatch, getState) => {
 	axios({
 		url: 'http://localhost:8003/items/item',
 		method: 'POST',
+		mode: 'cors',
 		headers: {
 			'Authorization': `Bearer ${token}`,
 			'Accept': 'application/json',
@@ -98,22 +109,55 @@ const createItem = formValues => (dispatch, getState) => {
 	})
 }
 
-// const updateItem = () => {
-// 	return {
-// 		type: UPDATE_ITEM
-// 	}
-// }
+const updateItemById = ({itemId, title}) => dispatch => {
+	dispatch({ type: UPDATING_ITEM_BY_ID })
+	axios({
+		url: 'http://localhost:8003/items/' + itemId,
+		method: 'PATCH',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		data: { title: title }
+	})
+	.then(response => {
+		dispatch({ type: UPDATE_ITEM_BY_ID, payload: response.data.item })
+	})
+	.catch(err => {
+		console.log(err)
+		dispatch({ type: UPDATE_ITEM_BY_ID_ERROR, payload: err })
+	})
+}
 
-// const deleteItem = () => {
-// 	return {
-// 		type: DELETE_ITEM
-// 	}
-// }
+const deleteItemById = itemId => dispatch => {
+	dispatch({ type: DELETING_ITEM_BY_ID })
+
+	axios({
+		url: 'http://localhost:8003/items/' + itemId,
+		method: 'DELETE',
+		headers: {
+			// 'Authorization': `Bearer ${token},`
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		// data: { itemId: itemId }
+	})
+	.then(response => {
+		console.log(response)
+		dispatch({ type: DELETE_ITEM_BY_ID, payload: itemId })
+		history.push('/items')
+	})
+	.catch(err => {
+		console.log(err)
+		dispatch({ type: DELETE_ITEM_BY_ID_ERROR, payload: err })
+	})
+}
 
 export {
 	fetchItems,
 	fetchItemById,
+	deleteItemById,
+	updateItemById,
 	createItem,
-	// updateItem,
-	// deleteItem
+	clearItems
 }

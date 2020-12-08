@@ -28,7 +28,8 @@ const signInWithEmail = data => dispatch => {
 		url: 'http://localhost:8003/auth/signin',
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Accept': 'application/json',
+			'Content-Type': 'application/json;charset=UTF-8'
 		},
 		data: {
 			email: data.email,

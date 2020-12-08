@@ -6,6 +6,7 @@ const useStyles = makeStyles({
 		padding: 6,
 		paddingLeft: 18,
 		paddingRight: 12,
+		marginBottom: 8
 	},
 	cardContent: {
 		display: 'flex',

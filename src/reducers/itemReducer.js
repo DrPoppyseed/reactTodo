@@ -13,8 +13,10 @@ import {
 	UPDATE_ITEM_BY_ID_ERROR,
 	DELETING_ITEM_BY_ID,
 	DELETE_ITEM_BY_ID,
-	DELETE_ITEM_BY_ID_ERROR
+	DELETE_ITEM_BY_ID_ERROR,
+	CLEAR_ITEMS
 } from '../actions/types'
+import _ from 'lodash'
 
 const INITIAL_STATE = {
 	items: [],
@@ -43,6 +45,34 @@ export default ((state=INITIAL_STATE, action) => {
 			return { ...state, loading: false  }
 		case FETCH_ITEM_BY_ID_ERROR:
 			return { ...state, loading: false, error: action.payload }
+		case DELETING_ITEM_BY_ID:
+			return { ...state, loading: true }
+		case DELETE_ITEM_BY_ID: 
+			return { 
+				...state, 
+				items: state.items.filter(item => item._id !== action.payload), 
+				loading: false 
+			}
+		case DELETE_ITEM_BY_ID_ERROR:
+			return { ...state, error: action.payload, loading: false }
+		case UPDATING_ITEM_BY_ID:
+			return { ...state, loading: true }
+		case UPDATE_ITEM_BY_ID:
+			return { 
+				...state, 
+				loading: false, 
+				items: state.items.map(item => {
+					if (item._id === action.payload._id) {
+						return action.payload
+					} else {
+						return item
+					}
+				})
+			}
+		case UPDATE_ITEM_BY_ID_ERROR:
+			return { ...state, error: action.payload, loading: false }
+		case CLEAR_ITEMS: 
+			return INITIAL_STATE
 		default: 
 			return state
 	}

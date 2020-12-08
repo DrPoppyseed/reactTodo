@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchItems } from '../../../actions'
+import { fetchItems, clearItems } from '../../../actions'
 
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
@@ -22,13 +22,14 @@ const ItemList = () => {
 	const isLoading = useSelector(checkIsLoading)
 
 	useEffect(() => {
+		dispatch(clearItems())
 		if (isSignedIn) dispatch(fetchItems())
-	}, [])
+	}, [isSignedIn])
 
-	const renderItemList = items.map(item => {
-		console.log('from inside renderItemList: ' + item.title)
+	const renderItemList = !isLoading && items.map(item => {
+		console.log('from inside renderItemList: ' + item.title + ' / ' + item._id)
 		return (
-			<Item key={item._id} title={item.title} />
+			<Item key={item._id} title={item.title} itemId={item._id} />
 		)
 	})
 

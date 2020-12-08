@@ -9,8 +9,9 @@ import {
 	fetchItems,
 	// fetchItem,
 	createItem,
-	// updateItem,
-	// deleteItem
+	clearItems,
+	updateItemById,
+	deleteItemById
 } from './itemActions'
 
 export {
@@ -22,6 +23,7 @@ export {
 	fetchItems,
 	// fetchItem,
 	createItem,
-	// updateItem,
-	// deleteItem,
+	clearItems,
+	updateItemById,
+	deleteItemById,
 }

@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteItemById, updateItemById } from '../../../actions'
 
 import useStyles from './styles'
 import Typography from '@material-ui/core/Typography'
@@ -14,8 +16,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton'
 import Card from '@material-ui/core/Card'
 
-const Item = ({title}) => {
+const getCurrentItem = state => state.items
+
+const Item = ({title, itemId}) => {
 	const { register, handleSubmit, control  } = useForm()
+	const currentItem = {} || useSelector(getCurrentItem)
+	const dispatch = useDispatch()
 	const classes = useStyles()
 	const [open, setOpen] = useState(false);
 
@@ -27,20 +33,14 @@ const Item = ({title}) => {
 		setOpen(true)
 	}
 
-  const handleCancelClick = () => {
-    setOpen(true);
-  }
-
-  const handleSubmitClick = () => {
-    setOpen(false);
-	}
-
 	const handleDeleteClick = () => {
-		console.log('delete')
+		dispatch(deleteItemById(itemId))
 	}
 
 	const onSubmit = data => {
 		console.log(data)
+		dispatch(updateItemById({itemId: itemId, title: data.title}))
+		setOpen(false)
 	}
 
 	return (
@@ -84,6 +84,7 @@ const Item = ({title}) => {
 								control={control}
 								className={classes.fullWidth}
 								variant='outlined'
+								defaultValue={title}
 								required
 							/>
 					</DialogContent>
@@ -91,7 +92,7 @@ const Item = ({title}) => {
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<Button onClick={handleSubmitClick} type='submit' color="primary" autoFocus>
+						<Button type='submit' color="primary" autoFocus>
 							Submit
 						</Button>
 					</DialogActions>
