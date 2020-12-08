@@ -10,12 +10,13 @@ import SendIcon from '@material-ui/icons/Send';
 import useStyles from './styles'
 
 const CreateItem = () => {
-	const { register, handleSubmit, control } = useForm()
+	const { register, handleSubmit, control, setValue } = useForm()
 	const dispatch = useDispatch()
 	const classes = useStyles()
 
 	const onSubmit = data => {
 		dispatch(createItem(data))
+		setValue('title', '')
 	}
 
 	return (
